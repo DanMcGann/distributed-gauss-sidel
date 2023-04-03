@@ -1,3 +1,16 @@
+Fork Details
+===================================================
+The purpose of this fork is to...
+1. reduce repo footprint and remove archaic files
+2. Simplify build system so that the algorithm can be simply build within another project by including it as a submodule and simply adding `add_subdirectory(distributed-gauss-sidel)` to the user's CMake
+3. Templatize DGS to allow it to run on 3d and 2d datasets
+
+
+Additional fork notes:
+The tests seem to be broken? Not a focus of this fork to fix them, so they remain broken here.
+
+The following readme is unedited for the original repo.
+
 Distributed-Mapper
 ===================================================
 This library is an implementation of the algorithm described in Distributed Trajectory Estimation with Privacy and Communication Constraints:

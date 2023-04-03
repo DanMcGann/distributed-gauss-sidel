@@ -11,7 +11,6 @@
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <gtsam/base/Testable.h>
-#include <CppUnitLite/TestHarness.h>
 
 using namespace std;
 using namespace gtsam;

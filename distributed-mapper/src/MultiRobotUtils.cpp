@@ -41,7 +41,8 @@ namespace distributed_mapper{
     Values poses;
     for(const Values::ConstKeyValuePair& key_value: rotations){
         Key key = key_value.key;
-        Pose3 pose(rotations.at<Rot3>(key), Matrix::Zero(3, 3));
+        Vector3 m = Vector3::Zero();
+        Pose3 pose(rotations.at<Rot3>(key), m);
         poses.insert(key, pose);
       }
     return poses;
@@ -52,7 +53,8 @@ namespace distributed_mapper{
     VectorValues vectorValues;
     for(const Values::ConstKeyValuePair& key_value: rotations){
         Key key = key_value.key;
-        vectorValues.insert(key, Matrix::Zero(6, 6));
+        Vector m = Vector::Zero(6);
+        vectorValues.insert(key, m);
       }
     return vectorValues;
   }
