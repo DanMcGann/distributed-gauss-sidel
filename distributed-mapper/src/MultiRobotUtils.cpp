@@ -192,7 +192,7 @@ namespace distributed_mapper{
         linearGraph.add(key1, -I_9x9, key2, M9, Z_9x1, model);
       }
     // prior on the anchor orientation
-    SharedDiagonal priorModel = noiseModel::Unit::Create(9);
+    SharedDiagonal priorModel = noiseModel::Isotropic::Sigma(9, 1e-4);
     linearGraph.add(keyAnchor, I_9x9, (Vector(9) << 1.0, 0.0, 0.0,/*  */ 0.0, 1.0, 0.0, /*  */ 0.0, 0.0, 1.0).finished(), priorModel);
     return linearGraph;
   }

@@ -257,6 +257,9 @@ class DistributedMapper{
     /** @brief linearizedPoses returns the linearized poses */
     gtsam::VectorValues linearizedPoses(){ return linearizedPoses_;}
 
+     /** @brief linearizedRotations returns the linearized rotations */
+    gtsam::VectorValues linearizedRotations(){ return linearizedRotation_;}
+
     /** @brief linearizedPosesAt returns the current pose estimate at sym */
     gtsam::Vector linearizedPosesAt(gtsam::Key key){ return linearizedPoses_.at(key); }
 
