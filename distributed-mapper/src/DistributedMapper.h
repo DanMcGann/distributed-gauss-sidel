@@ -278,7 +278,8 @@ class DistributedMapper{
     /** @brief convertLinearizedRotationToPoses iterates over linearized rotations and convert them to poses with zero translation  */
     void convertLinearizedRotationToPoses(){
       gtsam::Values rotValue = gtsam::InitializePose3::normalizeRelaxedRotations(linearizedRotation_);
-      initial_ = multirobot_util::pose3WithZeroTranslation(rotValue);
+      initial_ = multirobot_util::pose3WithTranslation(rotValue, initial_);
+      initial_.insert(keyAnchor, gtsam::Pose3());
       linearizedPoses_ = multirobot_util::initializeVectorValues(initial_); // Init linearized poses
       distGFG_ = *(chordalGraph_.linearize(initial_));
 

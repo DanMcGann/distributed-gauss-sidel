@@ -37,6 +37,18 @@ namespace distributed_mapper{
   }
 
   //*****************************************************************************
+  Values multirobot_util::pose3WithTranslation(Values rotations, Values init_poses){
+    Values poses;
+    for(const Values::ConstKeyValuePair& key_value: rotations){
+        Key key = key_value.key;
+        Vector3 m = init_poses.at<Pose3>(key).translation();
+        Pose3 pose(rotations.at<Rot3>(key), m);
+        poses.insert(key, pose);
+      }
+    return poses;
+  }
+
+ //*****************************************************************************
   Values multirobot_util::pose3WithZeroTranslation(Values rotations){
     Values poses;
     for(const Values::ConstKeyValuePair& key_value: rotations){
@@ -192,7 +204,7 @@ namespace distributed_mapper{
         linearGraph.add(key1, -I_9x9, key2, M9, Z_9x1, model);
       }
     // prior on the anchor orientation
-    SharedDiagonal priorModel = noiseModel::Isotropic::Sigma(9, 1e-4);
+    SharedDiagonal priorModel = noiseModel::Isotropic::Sigma(9, 1e-8);
     linearGraph.add(keyAnchor, I_9x9, (Vector(9) << 1.0, 0.0, 0.0,/*  */ 0.0, 1.0, 0.0, /*  */ 0.0, 0.0, 1.0).finished(), priorModel);
     return linearGraph;
   }

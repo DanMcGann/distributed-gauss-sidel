@@ -619,7 +619,7 @@ distributedOptimizer(std::vector< boost::shared_ptr<DistributedMapper> > distMap
         linRotEstimateNeighbor.insert( key,  distMappers[robot]->neighborsLinearizedRotationsAt(key) );
         // make a pose out of it
         gtsam::Values rotEstimateNeighbor = gtsam::InitializePose3::normalizeRelaxedRotations(linRotEstimateNeighbor);
-        gtsam::Values poseEstimateNeighbor = multirobot_util::pose3WithZeroTranslation(rotEstimateNeighbor);
+        gtsam::Values poseEstimateNeighbor = multirobot_util::pose3WithTranslation(rotEstimateNeighbor, neighbors);
         // store it
         distMappers[robot]->updateNeighbor(key, poseEstimateNeighbor.at<gtsam::Pose3>(key));
       }

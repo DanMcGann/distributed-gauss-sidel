@@ -84,6 +84,11 @@ namespace distributed_mapper{
     gtsam::Vector rowMajorVector(gtsam::Matrix3 R);
 
     /**
+   * @brief pose3WithTranslation sets the translation part
+   */
+    gtsam::Values pose3WithTranslation(gtsam::Values rotations, gtsam::Values poses);
+
+    /**
    * @brief pose3WithZeroTranslation sets to zero the translation part
    */
     gtsam::Values pose3WithZeroTranslation(gtsam::Values rotations);

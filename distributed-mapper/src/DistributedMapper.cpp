@@ -170,30 +170,39 @@ DistributedMapper::estimateRotation(){
 }
 
 //*****************************************************************************
-void
-DistributedMapper::chordalFactorGraph(){
-  chordalGraph_ = gtsam::NonlinearFactorGraph(); // Clear the previous graph
-  for(size_t k = 0; k < innerEdges_.size(); k++){
-      boost::shared_ptr<BetweenFactor<Pose3> > factor =
-          boost::dynamic_pointer_cast<BetweenFactor<Pose3> >(innerEdges_[k]);
-      if(factor){
-          Key key1 = factor->keys().at(0);
-          Key key2 = factor->keys().at(1);
-          Pose3 measured = factor->measured();
-          if(useBetweenNoise_){
-              // Convert noise model to chordal factor noise
-              SharedNoiseModel chordalNoise = multirobot_util::convertToChordalNoise(factor->noiseModel());
-              //chordalNoise->print("Chordal Noise: \n");
-              chordalGraph_.add(BetweenChordalFactor<Pose3>(key1, key2, measured, chordalNoise));
-            }
-          else{
-              chordalGraph_.add(BetweenChordalFactor<Pose3>(key1, key2, measured, poseNoiseModel_));
-            }
-        }
-      else{
-          chordalGraph_.add(innerEdges_[k]);
-        }
+void DistributedMapper::chordalFactorGraph() {
+  chordalGraph_ = gtsam::NonlinearFactorGraph();  // Clear the previous graph
+  for (size_t k = 0; k < innerEdges_.size(); k++) {
+    boost::shared_ptr<BetweenFactor<Pose3> > factor =
+        boost::dynamic_pointer_cast<BetweenFactor<Pose3> >(innerEdges_[k]);
+    if (factor) {
+      Key key1 = factor->keys().at(0);
+      Key key2 = factor->keys().at(1);
+      Pose3 measured = factor->measured();
+      if (useBetweenNoise_) {
+        // Convert noise model to chordal factor noise
+        SharedNoiseModel chordalNoise = multirobot_util::convertToChordalNoise(factor->noiseModel());
+        // chordalNoise->print("Chordal Noise: \n");
+        chordalGraph_.add(BetweenChordalFactor<Pose3>(key1, key2, measured, chordalNoise));
+      } else {
+        chordalGraph_.add(BetweenChordalFactor<Pose3>(key1, key2, measured, poseNoiseModel_));
+      }
     }
+
+    boost::shared_ptr<PriorFactor<Pose3>> prior = boost::dynamic_pointer_cast<PriorFactor<Pose3>>(innerEdges_[k]);
+    if (prior) {
+      Pose3 measured = prior->prior();
+      if (useBetweenNoise_) {
+        // Convert noise model to chordal factor noise
+        SharedNoiseModel chordalNoise = multirobot_util::convertToChordalNoise(prior->noiseModel());
+        // chordalNoise->print("Chordal Noise: \n");
+        chordalGraph_.add(BetweenChordalFactor<Pose3>(keyAnchor, prior->key(), measured, chordalNoise));
+      } else {
+        chordalGraph_.add(BetweenChordalFactor<Pose3>(keyAnchor, prior->key(), measured, poseNoiseModel_));
+      }
+    }
+  }
+  chordalGraph_.addPrior(keyAnchor, Pose3(), gtsam::noiseModel::Isotropic::Sigma(6, 1e-8));
 }
 
 //*****************************************************************************
